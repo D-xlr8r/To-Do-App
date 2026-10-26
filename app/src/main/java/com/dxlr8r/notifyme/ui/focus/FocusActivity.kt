@@ -234,7 +234,7 @@ private fun FocusScreen(
     val bg by animateColorAsState(if (night) Color.Black else MaterialTheme.colorScheme.background, label = "bg")
     val fg by animateColorAsState(if (night) Color(0xFF9AA39D) else MaterialTheme.colorScheme.onBackground, label = "fg")
     val sub = if (night) Color(0xFF5E6661) else MaterialTheme.colorScheme.onSurfaceVariant
-    val accent = if (night) Color(0xFF6FAE8A) else MaterialTheme.colorScheme.primary
+    val accent = if (night) Color(0xFFA78BFA) else MaterialTheme.colorScheme.primary
 
     val running = endAt > 0
     val paused = pausedLeft > 0
@@ -258,9 +258,15 @@ private fun FocusScreen(
         }
 
         val hourglassColors = if (night) {
-            HourglassColors(frame = Color(0xFF3A3530), glass = Color(0xFF6E7570), sand = Color(0xFFB8924A), sandDark = Color(0xFF8E6E33))
+            HourglassColors(
+                woodLight = Color(0xFF6B5340), woodDark = Color(0xFF3E2D20), glass = Color(0xFF6A6383),
+                sandLight = Color(0xFFC9A86A), sand = Color(0xFFA98647), sandDark = Color(0xFF7E6232), shadow = Color(0x66000000),
+            )
         } else {
-            HourglassColors(frame = Color(0xFF5B4636), glass = Color(0xFF9DA8A1), sand = Color(0xFFEBC56E), sandDark = Color(0xFFD29E3E))
+            HourglassColors(
+                woodLight = Color(0xFFB07B4F), woodDark = Color(0xFF6B4426), glass = Color(0xFF9C93B5),
+                sandLight = Color(0xFFF3DDA6), sand = Color(0xFFE2BC72), sandDark = Color(0xFFC08F45), shadow = Color(0x33000000),
+            )
         }
 
         val clockBlock: @Composable (TextUnit) -> Unit = { size ->
@@ -280,11 +286,13 @@ private fun FocusScreen(
         }
 
         val hourglass: @Composable (Modifier) -> Unit = { m ->
-            Hourglass(
-                endAt = endAt, pausedLeft = pausedLeft, totalMs = totalMs, finished = finished,
-                colors = hourglassColors, flip = flip.value,
-                modifier = m.semantics { contentDescription = "Hourglass timer" },
-            )
+            Box(m, contentAlignment = Alignment.Center) {
+                Hourglass(
+                    endAt = endAt, pausedLeft = pausedLeft, totalMs = totalMs, finished = finished,
+                    colors = hourglassColors, flip = flip.value,
+                    modifier = Modifier.fillMaxSize(0.8f).semantics { contentDescription = "Hourglass timer" },
+                )
+            }
         }
 
         val controlsBlock: @Composable () -> Unit = {
