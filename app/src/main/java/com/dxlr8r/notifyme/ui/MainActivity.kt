@@ -29,7 +29,7 @@ import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.TaskAlt
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.NotificationsOff
-import androidx.compose.material.icons.outlined.SelfImprovement
+import androidx.compose.material.icons.outlined.HourglassTop
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.TaskAlt
 import androidx.compose.material3.AlertDialog
@@ -250,6 +250,11 @@ private fun NotifyApp(vm: MainViewModel, launch: LaunchRequest?, consumeLaunch: 
                     icon = { Icon(if (tab == 1) Icons.Filled.CalendarMonth else Icons.Outlined.CalendarMonth, null) },
                     label = { Text("Calendar") }, colors = colors,
                 )
+                NavigationBarItem(
+                    selected = false, onClick = { openFocus(null) },
+                    icon = { Icon(Icons.Outlined.HourglassTop, null) },
+                    label = { Text("Focus") }, colors = colors,
+                )
             }
         },
         floatingActionButton = {
@@ -363,7 +368,6 @@ private fun Header(title: String, subtitle: String, onFocus: () -> Unit, onSetti
             Text(title, style = MaterialTheme.typography.headlineMedium)
             Text(subtitle, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
-        IconButton(onClick = onFocus) { Icon(Icons.Outlined.SelfImprovement, "Focus mode") }
         IconButton(onClick = onSettings) { Icon(Icons.Outlined.Settings, "Settings") }
     }
 }

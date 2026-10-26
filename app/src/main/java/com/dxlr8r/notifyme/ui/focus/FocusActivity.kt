@@ -14,6 +14,12 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
@@ -109,6 +115,7 @@ class FocusActivity : ComponentActivity() {
         val repo = Repository.get(this)
         val prefs = Prefs(this)
         val taskId = intent.getLongExtra(EXTRA_TASK_ID, -1)
+        val autoStart = intent.getIntExtra(EXTRA_START_MINUTES, 0)
 
         setContent {
             NotifyTheme {
@@ -123,6 +130,7 @@ class FocusActivity : ComponentActivity() {
                     tasks = tasks,
                     onPickTask = { task = it },
                     defaultMinutes = prefs.focusMinutes,
+                    autoStartMinutes = autoStart,
                     onMinutesChosen = { prefs.focusMinutes = it },
                     dndOn = { isDndOn() },
                     onToggleDnd = { toggleDnd() },
@@ -175,6 +183,7 @@ class FocusActivity : ComponentActivity() {
 
     companion object {
         const val EXTRA_TASK_ID = "task_id"
+        const val EXTRA_START_MINUTES = "start_minutes"
     }
 }
 
@@ -184,6 +193,7 @@ private fun FocusScreen(
     tasks: List<Item>,
     onPickTask: (Item?) -> Unit,
     defaultMinutes: Int,
+    autoStartMinutes: Int,
     onMinutesChosen: (Int) -> Unit,
     dndOn: () -> Boolean,
     onToggleDnd: () -> Boolean,
@@ -201,7 +211,15 @@ private fun FocusScreen(
     var nowMs by remember { mutableLongStateOf(System.currentTimeMillis()) }
     var customOpen by remember { mutableStateOf(false) }
     var taskMenu by remember { mutableStateOf(false) }
+    val flip = remember { Animatable(0f) }
+    val scope = rememberCoroutineScope()
 
+    LaunchedEffect(Unit) {
+        if (autoStartMinutes > 0 && endAt == 0L && pausedLeft == 0L && !finished) {
+            minutes = autoStartMinutes
+            endAt = System.currentTimeMillis() + autoStartMinutes * 60_000L
+        }
+    }
     LaunchedEffect(Unit) {
         while (true) {
             now = LocalDateTime.now()
@@ -239,13 +257,17 @@ private fun FocusScreen(
             }
         }
 
-        BoxWithConstraints(Modifier.fillMaxSize().padding(horizontal = 24.dp), contentAlignment = Alignment.Center) {
-            val landscape = maxWidth > maxHeight
-            val clockSize = (if (landscape) maxHeight.value / 2.6f else maxWidth.value / 3.3f).coerceIn(56f, 180f).sp
+        val hourglassColors = if (night) {
+            HourglassColors(frame = Color(0xFF3A3530), glass = Color(0xFF6E7570), sand = Color(0xFFB8924A), sandDark = Color(0xFF8E6E33))
+        } else {
+            HourglassColors(frame = Color(0xFF5B4636), glass = Color(0xFF9DA8A1), sand = Color(0xFFEBC56E), sandDark = Color(0xFFD29E3E))
+        }
+
+        val clockBlock: @Composable (TextUnit) -> Unit = { size ->
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
                     now.format(DateTimeFormatter.ofPattern(if (android.text.format.DateFormat.is24HourFormat(androidx.compose.ui.platform.LocalContext.current)) "HH:mm" else "h:mm", Locale.getDefault())),
-                    style = ClockStyle.copy(fontSize = clockSize),
+                    style = ClockStyle.copy(fontSize = size),
                     color = fg,
                     modifier = Modifier.clickable(interactionSource = null, indication = null) { night = !night },
                 )
@@ -254,19 +276,37 @@ private fun FocusScreen(
                     style = MaterialTheme.typography.titleMedium,
                     color = sub,
                 )
-                Spacer(Modifier.height(if (landscape) 16.dp else 40.dp))
+            }
+        }
 
+        val hourglass: @Composable (Modifier) -> Unit = { m ->
+            Hourglass(
+                endAt = endAt, pausedLeft = pausedLeft, totalMs = totalMs, finished = finished,
+                colors = hourglassColors, flip = flip.value,
+                modifier = m.semantics { contentDescription = "Hourglass timer" },
+            )
+        }
+
+        val controlsBlock: @Composable () -> Unit = {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                // Time left (or the planned length before starting)
+                val shown = if (running || paused) leftMs else if (finished) 0L else totalMs
+                Text(
+                    "%02d:%02d".format(shown / 60_000, (shown / 1000) % 60),
+                    style = ClockStyle.copy(fontSize = 44.sp, letterSpacing = 0.sp),
+                    color = if (running || paused || finished) fg else sub,
+                )
                 // Task
                 Box {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         modifier = Modifier
                             .clickable(enabled = !running && !paused) { taskMenu = true }
-                            .padding(8.dp),
+                            .padding(6.dp),
                     ) {
                         Text(if (task != null) "Focusing on" else "Choose a task (optional)", style = MaterialTheme.typography.labelMedium, color = sub)
                         if (task != null) Text(
-                            task.title, style = MaterialTheme.typography.titleLarge, color = fg,
+                            task.title, style = MaterialTheme.typography.titleMedium, color = fg,
                             maxLines = 2, overflow = TextOverflow.Ellipsis, textAlign = TextAlign.Center,
                         )
                     }
@@ -280,42 +320,25 @@ private fun FocusScreen(
                         }
                     }
                 }
-                Spacer(Modifier.height(16.dp))
-
+                Spacer(Modifier.height(10.dp))
                 when {
-                    running || paused -> {
-                        val mm = leftMs / 60_000
-                        val ss = (leftMs / 1000) % 60
-                        Text("%02d:%02d".format(mm, ss), style = ClockStyle.copy(fontSize = 44.sp), color = fg)
-                        Spacer(Modifier.height(10.dp))
-                        LinearProgressIndicator(
-                            progress = { 1f - leftMs.toFloat() / totalMs.coerceAtLeast(1) },
-                            modifier = Modifier.width(240.dp).height(6.dp),
-                            color = accent,
-                            trackColor = accent.copy(alpha = 0.18f),
-                            strokeCap = StrokeCap.Round,
-                            gapSize = 0.dp,
-                            drawStopIndicator = {},
-                        )
-                        Spacer(Modifier.height(18.dp))
-                        Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                            OutlinedButton(onClick = {
-                                if (running) { pausedLeft = leftMs; endAt = 0 } else { endAt = System.currentTimeMillis() + pausedLeft; pausedLeft = 0 }
-                            }) {
-                                Icon(if (running) Icons.Outlined.Pause else Icons.Outlined.PlayArrow, null, Modifier.size(18.dp), tint = fg)
-                                Spacer(Modifier.width(6.dp))
-                                Text(if (running) "Pause" else "Resume", color = fg)
-                            }
-                            OutlinedButton(onClick = { endAt = 0; pausedLeft = 0 }) {
-                                Icon(Icons.Outlined.Stop, null, Modifier.size(18.dp), tint = fg)
-                                Spacer(Modifier.width(6.dp))
-                                Text("Stop", color = fg)
-                            }
+                    running || paused -> Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                        OutlinedButton(onClick = {
+                            if (running) { pausedLeft = leftMs; endAt = 0 } else { endAt = System.currentTimeMillis() + pausedLeft; pausedLeft = 0 }
+                        }) {
+                            Icon(if (running) Icons.Outlined.Pause else Icons.Outlined.PlayArrow, null, Modifier.size(18.dp), tint = fg)
+                            Spacer(Modifier.width(6.dp))
+                            Text(if (running) "Pause" else "Resume", color = fg)
+                        }
+                        OutlinedButton(onClick = { endAt = 0; pausedLeft = 0 }) {
+                            Icon(Icons.Outlined.Stop, null, Modifier.size(18.dp), tint = fg)
+                            Spacer(Modifier.width(6.dp))
+                            Text("Stop", color = fg)
                         }
                     }
-                    finished -> {
+                    finished -> Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Text("Time's up — nice work.", style = MaterialTheme.typography.titleMedium, color = fg)
-                        Spacer(Modifier.height(14.dp))
+                        Spacer(Modifier.height(10.dp))
                         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                             if (task != null) Button(
                                 onClick = { onMarkDone(task) },
@@ -325,10 +348,17 @@ private fun FocusScreen(
                                 Spacer(Modifier.width(6.dp))
                                 Text("Mark task done")
                             }
-                            OutlinedButton(onClick = { finished = false }) { Text("Again", color = fg) }
+                            OutlinedButton(onClick = {
+                                // Turn the hourglass over, then it is ready again.
+                                scope.launch {
+                                    flip.animateTo(1f, tween(800))
+                                    finished = false
+                                    flip.snapTo(0f)
+                                }
+                            }) { Text("Turn over", color = fg) }
                         }
                     }
-                    else -> {
+                    else -> Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                             listOf(25, 50).forEach { m ->
                                 FilterChip(
@@ -343,7 +373,7 @@ private fun FocusScreen(
                                 colors = FilterChipDefaults.filterChipColors(labelColor = fg, selectedContainerColor = accent.copy(alpha = 0.2f), selectedLabelColor = fg),
                             )
                         }
-                        Spacer(Modifier.height(14.dp))
+                        Spacer(Modifier.height(10.dp))
                         Button(
                             onClick = { finished = false; endAt = System.currentTimeMillis() + minutes * 60_000L },
                             colors = ButtonDefaults.buttonColors(containerColor = accent),
@@ -354,6 +384,26 @@ private fun FocusScreen(
                             Text("Start focus")
                         }
                     }
+                }
+            }
+        }
+
+        BoxWithConstraints(Modifier.fillMaxSize().padding(start = 24.dp, end = 24.dp, top = 56.dp, bottom = 16.dp)) {
+            if (maxWidth > maxHeight) {
+                // Landscape: clock and controls on the left, hourglass on the right
+                Row(Modifier.fillMaxSize(), verticalAlignment = Alignment.CenterVertically) {
+                    Column(Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
+                        clockBlock((maxHeight.value / 4.2f).coerceIn(44f, 110f).sp)
+                        Spacer(Modifier.height(12.dp))
+                        controlsBlock()
+                    }
+                    hourglass(Modifier.weight(0.8f).fillMaxHeight())
+                }
+            } else {
+                Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
+                    clockBlock((maxWidth.value / 4.6f).coerceIn(44f, 110f).sp)
+                    hourglass(Modifier.weight(1f).fillMaxWidth().padding(vertical = 14.dp))
+                    controlsBlock()
                 }
             }
         }

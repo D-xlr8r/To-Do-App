@@ -35,7 +35,7 @@ import androidx.compose.material.icons.outlined.Mic
 import androidx.compose.material.icons.outlined.NotificationsNone
 import androidx.compose.material.icons.outlined.Repeat
 import androidx.compose.material.icons.outlined.Schedule
-import androidx.compose.material.icons.outlined.SelfImprovement
+import androidx.compose.material.icons.outlined.HourglassTop
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Button
@@ -211,7 +211,7 @@ fun ItemEditorSheet(
                 )
                 if (existing != null && isTask) {
                     IconButton(onClick = { onFocus(existing); close() }) {
-                        Icon(Icons.Outlined.SelfImprovement, "Focus on this task")
+                        Icon(Icons.Outlined.HourglassTop, "Focus on this task")
                     }
                 }
                 if (existing != null) {
