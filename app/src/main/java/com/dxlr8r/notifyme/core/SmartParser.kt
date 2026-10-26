@@ -144,7 +144,7 @@ object SmartParser {
                 unit.startsWith("h") -> (amt.toLongOrNull() ?: 1L) * 60
                 else -> (amt.toLongOrNull() ?: 1L) * 1440
             }
-            c.absolute = c.now.plusMinutes(minutes).withSecond(0).withNano(0)
+            c.absolute = c.now.plusMinutes(minutes).plusSeconds(59).withSecond(0).withNano(0)
             true
         }
         val hi = rx("$L(\\d+|आधे|aadhe|adhe|aadha|ek)\\s*(मिनट|minute|minutes|min|घंटे|घंटा|ghante|ghanta|दिन|din)\\s*(में|मे|बाद|mein|main|me|baad|bad)$R")
@@ -158,7 +158,7 @@ object SmartParser {
                 unit in setOf("घंटे", "घंटा", "ghante", "ghanta") -> if (half) 30 else amt * 60
                 else -> amt * 1440
             }
-            c.absolute = c.now.plusMinutes(minutes).withSecond(0).withNano(0)
+            c.absolute = c.now.plusMinutes(minutes).plusSeconds(59).withSecond(0).withNano(0)
             true
         }
     }
