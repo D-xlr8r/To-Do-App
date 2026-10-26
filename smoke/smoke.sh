@@ -98,6 +98,11 @@ if [ -n "$c" ]; then set -- $c; adb shell input draganddrop $1 $(( $2 - 120 )) 5
 sleep 4; shot 21_widget_drop
 tap text "Add"; tap text "Add to home screen"; sleep 3
 adb shell input keyevent 3; sleep 3; shot 22_widget_home
+tap desc "Mark done" 0; sleep 3; shot 23_widget_ticked
+tap text "Today"; sleep 3; shot 24_widget_today
+tap text "Tasks"; sleep 2
+tap desc "Add"; sleep 3; shot 25_widget_plus_opens_app
+adb shell input keyevent 4; sleep 1; adb shell input keyevent 3; sleep 2
 
 # 8. Rescheduling after "update" and widget update broadcast
 adb shell am broadcast -a android.intent.action.MY_PACKAGE_REPLACED -n $PKG/.reminders.SystemEventsReceiver
