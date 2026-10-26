@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.dxlr8r.notifyme.core.SmartParserTest" tests="18" skipped="0" failures="0" errors="0" timestamp="2026-10-26T09:20:37.787Z" hostname="runnervmtai0g" time="0.144">
+  <properties/>
+  <testcase name="hindiDailyNight" classname="com.dxlr8r.notifyme.core.SmartParserTest" time="0.082"/>
+  <testcase name="customDays" classname="com.dxlr8r.notifyme.core.SmartParserTest" time="0.006"/>
+  <testcase name="hindiEvening" classname="com.dxlr8r.notifyme.core.SmartParserTest" time="0.004"/>
+  <testcase name="weekdayAndMinutes" classname="com.dxlr8r.notifyme.core.SmartParserTest" time="0.006"/>
+  <testcase name="indianNumericDate" classname="com.dxlr8r.notifyme.core.SmartParserTest" time="0.005"/>
+  <testcase name="dailyRepeat" classname="com.dxlr8r.notifyme.core.SmartParserTest" time="0.003"/>
+  <testcase name="hinglishNight" classname="com.dxlr8r.notifyme.core.SmartParserTest" time="0.003"/>
+  <testcase name="noon" classname="com.dxlr8r.notifyme.core.SmartParserTest" time="0.003"/>
+  <testcase name="weeklyOnTwoDays" classname="com.dxlr8r.notifyme.core.SmartParserTest" time="0.007"/>
+  <testcase name="explicitDate" classname="com.dxlr8r.notifyme.core.SmartParserTest" time="0.003"/>
+  <testcase name="hindiRelative" classname="com.dxlr8r.notifyme.core.SmartParserTest" time="0.003"/>
+  <testcase name="plainTextHasNoReminder" classname="com.dxlr8r.notifyme.core.SmartParserTest" time="0.003"/>
+  <testcase name="hindiSaadhe" classname="com.dxlr8r.notifyme.core.SmartParserTest" time="0.003"/>
+  <testcase name="earlyHourMeansPm" classname="com.dxlr8r.notifyme.core.SmartParserTest" time="0.002"/>
+  <testcase name="englishTomorrowPm" classname="com.dxlr8r.notifyme.core.SmartParserTest" time="0.003"/>
+  <testcase name="hinglishWeekly" classname="com.dxlr8r.notifyme.core.SmartParserTest" time="0.002"/>
+  <testcase name="bareHourPicksEvening" classname="com.dxlr8r.notifyme.core.SmartParserTest" time="0.001"/>
+  <testcase name="relativeHours" classname="com.dxlr8r.notifyme.core.SmartParserTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
