@@ -49,14 +49,14 @@ adb shell am start -W -n $PKG/.ui.MainActivity; sleep 3; shot 10_tasks_after_ala
 
 # 3. Notification-style reminder + snooze from notification
 tap desc "Add task"; typew "Stretch in 1 minute"; hidekb; tap textprefix "Set reminder"; tap text "Save"
-adb shell input keyevent 3; sleep 75
+adb shell input keyevent 3; sleep 130
 adb shell cmd statusbar expand-notifications; sleep 2; shot 11_notification
 tap text "Snooze 10 min"; sleep 2; shot 12_after_snooze
 adb shell cmd statusbar collapse
 adb shell am start -W -n $PKG/.ui.MainActivity; sleep 3; shot 13_tasks_snoozed
 
 # 4. Tick a task, undo, completed list
-tap desc "Mark done" 1; sleep 1; shot 14_done_snackbar
+tap desc "Mark done" 1; adb exec-out screencap -p > shots/14_done_snackbar.png
 sleep 5; tap textprefix "Completed"; shot 15_completed
 
 # 5. Hindi phrase parsing via typed text
@@ -69,6 +69,16 @@ tap desc "Settings"; shot 17_settings; adb shell input keyevent 4; sleep 1
 # 7. Focus mode (clock ticks, so no UI dumps there)
 adb shell am start -W -n $PKG/.ui.focus.FocusActivity; sleep 3; shot 18_focus
 adb shell input keyevent 4; sleep 2
+
+# 9. Home-screen widget: long-press home, open Widgets, add NotifyMe
+adb shell input keyevent 3; sleep 2
+adb shell input swipe 540 1200 540 1200 1500; sleep 2; shot 19_home_longpress
+tap text "Widgets"; sleep 2
+for i in 1 2 3 4 5 6; do dump; if python3 smoke/ui.py ui.xml text "NotifyMe" | grep -q .; then break; fi; adb shell input swipe 540 1800 540 700 400; sleep 1; done
+tap text "NotifyMe"; sleep 2; shot 20_widget_picker
+tap textprefix "NotifyMe sticky"; sleep 1
+tap text "Add to home screen"; tap text "Add"; sleep 3
+shot 21_widget_home
 
 # 8. Rescheduling after "update" and widget update broadcast
 adb shell am broadcast -a android.intent.action.MY_PACKAGE_REPLACED -n $PKG/.reminders.SystemEventsReceiver
