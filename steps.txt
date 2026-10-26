@@ -1,0 +1,14 @@
+NOT FOUND: Wait
+TAP OK: Next
+TAP OK: Next
+TAP OK: Next
+TAP OK: Next
+TAP OK: Next
+TAP OK: Add widget to home screen
+TAP OK: Add to home screen
+NOT FOUND: Add automatically
+NOT FOUND: Add
+TAP OK: Get started
+TAP OK: Settings
+TAP OK: App tour
+done

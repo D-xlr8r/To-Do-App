@@ -1,0 +1,249 @@
++ PKG=com.dxlr8r.notifyme
++ mkdir -p shots
++ adb shell settings put secure immersive_mode_confirmations confirmed
++ adb install -r smoke/NotifyMe.apk
+Performing Streamed Install
+Success
++ adb shell pm grant com.dxlr8r.notifyme android.permission.POST_NOTIFICATIONS
++ adb shell appops set com.dxlr8r.notifyme SCHEDULE_EXACT_ALARM allow
++ adb shell appops set com.dxlr8r.notifyme USE_FULL_SCREEN_INTENT allow
++ adb logcat -c
++ adb shell am start -W -n com.dxlr8r.notifyme/.ui.MainActivity
+Starting: Intent { cmp=com.dxlr8r.notifyme/.ui.MainActivity }
+Status: ok
+LaunchState: COLD
+Activity: com.dxlr8r.notifyme/.ui.MainActivity
+TotalTime: 4238
+WaitTime: 4241
+Complete
++ sleep 5
++ tap text Wait
++ dump
++ adb shell uiautomator dump /sdcard/ui.xml
++ adb pull /sdcard/ui.xml ui.xml
+++ python3 smoke/ui.py ui.xml text Wait 0
++ c=
++ '[' -n '' ']'
++ echo 'NOT FOUND: Wait'
+++ echo Wait
+++ tr -c a-zA-Z0-9 _
++ cp ui.xml shots/notfound-Wait_.xml
++ sleep 2
++ adb shell am start -W -n com.dxlr8r.notifyme/.ui.MainActivity
+Starting: Intent { cmp=com.dxlr8r.notifyme/.ui.MainActivity }
+Warning: Activity not started, intent has been delivered to currently running top-most instance.
+Status: ok
+LaunchState: UNKNOWN (0)
+Activity: com.dxlr8r.notifyme/.ui.MainActivity
+TotalTime: 0
+WaitTime: 54
+Complete
++ sleep 2
++ shot 01_tour_welcome
++ sleep 1.5
++ adb exec-out screencap -p
++ tap text Next
++ dump
++ adb shell uiautomator dump /sdcard/ui.xml
++ adb pull /sdcard/ui.xml ui.xml
+++ python3 smoke/ui.py ui.xml text Next 0
++ c='870 2229'
++ '[' -n '870 2229' ']'
++ adb shell input tap 870 2229
++ echo 'TAP OK: Next'
++ sleep 2
++ shot 02_tour_add
++ sleep 1.5
++ adb exec-out screencap -p
++ tap text Next
++ dump
++ adb shell uiautomator dump /sdcard/ui.xml
++ adb pull /sdcard/ui.xml ui.xml
+++ python3 smoke/ui.py ui.xml text Next 0
++ c='870 2229'
++ '[' -n '870 2229' ']'
++ adb shell input tap 870 2229
++ echo 'TAP OK: Next'
++ sleep 2
++ shot 03_tour_tasks
++ sleep 1.5
++ adb exec-out screencap -p
++ tap text Next
++ dump
++ adb shell uiautomator dump /sdcard/ui.xml
++ adb pull /sdcard/ui.xml ui.xml
+++ python3 smoke/ui.py ui.xml text Next 0
++ c='870 2229'
++ '[' -n '870 2229' ']'
++ adb shell input tap 870 2229
++ echo 'TAP OK: Next'
++ sleep 2
++ shot 04_tour_calendar
++ sleep 1.5
++ adb exec-out screencap -p
++ tap text Next
++ dump
++ adb shell uiautomator dump /sdcard/ui.xml
++ adb pull /sdcard/ui.xml ui.xml
+++ python3 smoke/ui.py ui.xml text Next 0
++ c='870 2229'
++ '[' -n '870 2229' ']'
++ adb shell input tap 870 2229
++ echo 'TAP OK: Next'
++ sleep 2
++ shot 05_tour_focus
++ sleep 1.5
++ adb exec-out screencap -p
++ tap text Next
++ dump
++ adb shell uiautomator dump /sdcard/ui.xml
++ adb pull /sdcard/ui.xml ui.xml
+++ python3 smoke/ui.py ui.xml text Next 0
++ c='870 2229'
++ '[' -n '870 2229' ']'
++ adb shell input tap 870 2229
++ echo 'TAP OK: Next'
++ sleep 2
++ shot 06_tour_widget
++ sleep 1.5
++ adb exec-out screencap -p
++ adb shell input swipe 540 1500 540 700 300
++ sleep 1
++ shot 07_tour_widget_scrolled
++ sleep 1.5
++ adb exec-out screencap -p
++ tap text 'Add widget to home screen'
++ dump
++ adb shell uiautomator dump /sdcard/ui.xml
++ adb pull /sdcard/ui.xml ui.xml
+++ python3 smoke/ui.py ui.xml text 'Add widget to home screen' 0
++ c='577 1488'
++ '[' -n '577 1488' ']'
++ adb shell input tap 577 1488
++ echo 'TAP OK: Add widget to home screen'
++ sleep 2
++ sleep 3
++ shot 08_pin_dialog
++ sleep 1.5
++ adb exec-out screencap -p
++ dump
++ adb shell uiautomator dump /sdcard/ui.xml
++ adb pull /sdcard/ui.xml ui.xml
++ cp ui.xml shots/pin_dialog.xml
++ tap text 'Add to home screen'
++ dump
++ adb shell uiautomator dump /sdcard/ui.xml
++ adb pull /sdcard/ui.xml ui.xml
+++ python3 smoke/ui.py ui.xml text 'Add to home screen' 0
++ c='831 2253'
++ '[' -n '831 2253' ']'
++ adb shell input tap 831 2253
++ echo 'TAP OK: Add to home screen'
++ sleep 2
++ tap text 'Add automatically'
++ dump
++ adb shell uiautomator dump /sdcard/ui.xml
++ adb pull /sdcard/ui.xml ui.xml
+++ python3 smoke/ui.py ui.xml text 'Add automatically' 0
++ c=
++ '[' -n '' ']'
++ echo 'NOT FOUND: Add automatically'
+++ echo Add automatically
+++ tr -c a-zA-Z0-9 _
++ cp ui.xml shots/notfound-Add_automatically_.xml
++ sleep 2
++ tap text Add
++ dump
++ adb shell uiautomator dump /sdcard/ui.xml
++ adb pull /sdcard/ui.xml ui.xml
+++ python3 smoke/ui.py ui.xml text Add 0
++ c=
++ '[' -n '' ']'
++ echo 'NOT FOUND: Add'
+++ echo Add
+++ tr -c a-zA-Z0-9 _
++ cp ui.xml shots/notfound-Add_.xml
++ sleep 2
++ sleep 3
++ shot 09_after_pin
++ sleep 1.5
++ adb exec-out screencap -p
++ adb shell am start -W -n com.dxlr8r.notifyme/.ui.MainActivity
+Starting: Intent { cmp=com.dxlr8r.notifyme/.ui.MainActivity }
+Warning: Activity not started, intent has been delivered to currently running top-most instance.
+Status: ok
+LaunchState: UNKNOWN (0)
+Activity: com.dxlr8r.notifyme/.ui.MainActivity
+TotalTime: 0
+WaitTime: 11
+Complete
++ sleep 2
++ shot 10_back_in_tour
++ sleep 1.5
++ adb exec-out screencap -p
++ tap text 'Get started'
++ dump
++ adb shell uiautomator dump /sdcard/ui.xml
++ adb pull /sdcard/ui.xml ui.xml
+++ python3 smoke/ui.py ui.xml text 'Get started' 0
++ c='869 2229'
++ '[' -n '869 2229' ']'
++ adb shell input tap 869 2229
++ echo 'TAP OK: Get started'
++ sleep 2
++ sleep 2
++ shot 11_main_after_tour
++ sleep 1.5
++ adb exec-out screencap -p
++ adb shell am force-stop com.dxlr8r.notifyme
++ adb shell am start -W -n com.dxlr8r.notifyme/.ui.MainActivity
+Starting: Intent { cmp=com.dxlr8r.notifyme/.ui.MainActivity }
+Status: ok
+LaunchState: WARM
+Activity: com.dxlr8r.notifyme/.ui.MainActivity
+TotalTime: 1210
+WaitTime: 1214
+Complete
++ sleep 3
++ shot 12_relaunch_no_tour
++ sleep 1.5
++ adb exec-out screencap -p
++ tap desc Settings
++ dump
++ adb shell uiautomator dump /sdcard/ui.xml
++ adb pull /sdcard/ui.xml ui.xml
+++ python3 smoke/ui.py ui.xml desc Settings 0
++ c='996 234'
++ '[' -n '996 234' ']'
++ adb shell input tap 996 234
++ echo 'TAP OK: Settings'
++ sleep 2
++ sleep 2
++ adb shell input swipe 540 1800 540 900 300
++ sleep 1
++ shot 13_settings_tour_row
++ sleep 1.5
++ adb exec-out screencap -p
++ tap text 'App tour'
++ dump
++ adb shell uiautomator dump /sdcard/ui.xml
++ adb pull /sdcard/ui.xml ui.xml
+++ python3 smoke/ui.py ui.xml text 'App tour' 0
++ c='245 2000'
++ '[' -n '245 2000' ']'
++ adb shell input tap 245 2000
++ echo 'TAP OK: App tour'
++ sleep 2
++ sleep 2
++ shot 14_tour_from_settings
++ sleep 1.5
++ adb exec-out screencap -p
++ adb shell input keyevent 3
++ sleep 3
++ shot 15_home_widget
++ sleep 1.5
++ adb exec-out screencap -p
++ adb logcat -d
++ grep -n 'FATAL EXCEPTION' -A 30 shots/logcat.txt
++ true
++ echo done

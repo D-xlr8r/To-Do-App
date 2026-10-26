@@ -1,0 +1,5 @@
+commit=db69609296ace09b4971b8a40284715b7d7a6c52
+emulator=success
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/root       145G   66G   80G  46% /
+/dev/kvm
