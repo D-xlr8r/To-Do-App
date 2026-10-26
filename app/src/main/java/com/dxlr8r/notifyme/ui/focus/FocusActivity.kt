@@ -389,11 +389,13 @@ private fun FocusScreen(
         }
 
         BoxWithConstraints(Modifier.fillMaxSize().padding(start = 24.dp, end = 24.dp, top = 56.dp, bottom = 16.dp)) {
-            if (maxWidth > maxHeight) {
+            val w = maxWidth
+            val h = maxHeight
+            if (w > h) {
                 // Landscape: clock and controls on the left, hourglass on the right
                 Row(Modifier.fillMaxSize(), verticalAlignment = Alignment.CenterVertically) {
                     Column(Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
-                        clockBlock((maxHeight.value / 4.2f).coerceIn(44f, 110f).sp)
+                        clockBlock((h.value / 4.2f).coerceIn(44f, 110f).sp)
                         Spacer(Modifier.height(12.dp))
                         controlsBlock()
                     }
@@ -401,7 +403,7 @@ private fun FocusScreen(
                 }
             } else {
                 Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
-                    clockBlock((maxWidth.value / 4.6f).coerceIn(44f, 110f).sp)
+                    clockBlock((w.value / 4.6f).coerceIn(44f, 110f).sp)
                     hourglass(Modifier.weight(1f).fillMaxWidth().padding(vertical = 14.dp))
                     controlsBlock()
                 }
