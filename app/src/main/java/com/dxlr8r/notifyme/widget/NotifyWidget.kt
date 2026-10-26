@@ -134,7 +134,10 @@ private fun StickyNote(context: Context, mode: Int, tasks: List<Item>, events: L
     ) {
         Column(GlanceModifier.fillMaxSize().padding(start = 14.dp, end = 10.dp, top = 14.dp, bottom = 8.dp)) {
             Row(GlanceModifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                Dot(DotRed); Spacer(GlanceModifier.width(4.dp)); Dot(DotYellow); Spacer(GlanceModifier.width(4.dp)); Dot(DotGreen)
+                // Widget rows can hold at most 10 children, so the three dots share one inner row.
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Dot(DotRed); Spacer(GlanceModifier.width(4.dp)); Dot(DotYellow); Spacer(GlanceModifier.width(4.dp)); Dot(DotGreen)
+                }
                 Spacer(GlanceModifier.width(12.dp))
                 Tab("Tasks", mode == 0, 0)
                 Spacer(GlanceModifier.width(14.dp))
