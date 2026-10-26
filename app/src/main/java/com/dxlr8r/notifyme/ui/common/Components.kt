@@ -43,6 +43,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.unit.dp
 import java.time.Instant
 import java.time.LocalDate
@@ -66,8 +69,13 @@ fun TaskCheckbox(checked: Boolean, onToggle: () -> Unit, modifier: Modifier = Mo
                 interactionSource = remember { MutableInteractionSource() },
                 indication = ripple(bounded = false, radius = 20.dp),
                 role = Role.Checkbox,
+                onClickLabel = if (checked) "Mark not done" else "Mark done",
                 onClick = onToggle,
-            ),
+            )
+            .semantics(mergeDescendants = true) {
+                contentDescription = if (checked) "Mark not done" else "Mark done"
+                stateDescription = if (checked) "Done" else "Not done"
+            },
         contentAlignment = Alignment.Center,
     ) {
         Box(
@@ -80,7 +88,7 @@ fun TaskCheckbox(checked: Boolean, onToggle: () -> Unit, modifier: Modifier = Mo
         ) {
             Icon(
                 Icons.Filled.Check,
-                contentDescription = if (checked) "Done" else "Not done",
+                contentDescription = null,
                 tint = MaterialTheme.colorScheme.onPrimary,
                 modifier = Modifier.size(16.dp).scale(checkScale),
             )
