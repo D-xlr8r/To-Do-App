@@ -76,15 +76,19 @@ adb shell settings put system user_rotation 0; sleep 3
 sleep 40; shot 18e_hourglass_finished
 adb shell input keyevent 4; sleep 2
 
-# 9. Home-screen widget: long-press home, open Widgets, add NotifyMe
+# 9. Home-screen widget: long-press home → Widgets → search → drag onto the home screen
 adb shell input keyevent 3; sleep 2
-adb shell input swipe 540 1200 540 1200 1500; sleep 2; shot 19_home_longpress
+adb shell input swipe 540 1200 540 1200 1500; sleep 2
 tap text "Widgets"; sleep 2
-for i in 1 2 3 4 5 6; do dump; if python3 smoke/ui.py ui.xml text "NotifyMe" | grep -q .; then break; fi; adb shell input swipe 540 1800 540 700 400; sleep 1; done
-tap text "NotifyMe"; sleep 2; shot 20_widget_picker
-tap textprefix "NotifyMe sticky"; sleep 1
-tap text "Add to home screen"; tap text "Add"; sleep 3
-shot 21_widget_home
+tap text "Search"; adb shell input text "NotifyMe"; sleep 3; adb shell input keyevent 111; sleep 1; shot 20_widget_search
+dump; cp ui.xml shots/widget_picker.xml
+c=$(python3 smoke/ui.py ui.xml textprefix "NotifyMe sticky")
+[ -z "$c" ] && c=$(python3 smoke/ui.py ui.xml descprefix "NotifyMe sticky")
+[ -z "$c" ] && c=$(python3 smoke/ui.py ui.xml textprefix "NotifyMe" 1)
+if [ -n "$c" ]; then set -- $c; adb shell input draganddrop $1 $(( $2 - 150 )) 540 900 2500; echo "DRAG: $c" >> shots/steps.txt; else echo "WIDGET NOT FOUND" >> shots/steps.txt; fi
+sleep 4; shot 21_widget_drop
+tap text "Add"; sleep 3
+adb shell input keyevent 3; sleep 3; shot 22_widget_home
 
 # 8. Rescheduling after "update" and widget update broadcast
 adb shell am broadcast -a android.intent.action.MY_PACKAGE_REPLACED -n $PKG/.reminders.SystemEventsReceiver
