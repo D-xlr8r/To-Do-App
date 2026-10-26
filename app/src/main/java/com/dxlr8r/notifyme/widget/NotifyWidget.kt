@@ -191,7 +191,7 @@ private fun Tab(label: String, active: Boolean, mode: Int) {
         label,
         style = TextStyle(
             color = ColorProvider(if (active) Ink else InkSoft),
-            fontSize = 15.sp,
+            fontSize = 18.75.sp,
             fontWeight = if (active) FontWeight.Bold else FontWeight.Medium,
             textDecoration = if (active) TextDecoration.Underline else TextDecoration.None,
         ),
@@ -229,7 +229,7 @@ private fun TaskLine(context: Context, task: Item, openIntent: Intent) {
         Text(
             task.title,
             maxLines = 2,
-            style = TextStyle(color = ColorProvider(Ink), fontSize = 14.sp),
+            style = TextStyle(color = ColorProvider(Ink), fontSize = 17.5.sp),
             modifier = GlanceModifier.defaultWeight().clickable(actionStartActivity(openIntent)),
         )
         val next = task.snoozeAt ?: task.nextAt
@@ -237,7 +237,7 @@ private fun TaskLine(context: Context, task: Item, openIntent: Intent) {
             Spacer(GlanceModifier.width(6.dp))
             Text(
                 shortWhen(context, next.toLocalDateTime()),
-                style = TextStyle(color = ColorProvider(InkSoft), fontSize = 11.sp),
+                style = TextStyle(color = ColorProvider(InkSoft), fontSize = 13.75.sp),
             )
         }
     }
@@ -251,8 +251,8 @@ private fun TodayLine(context: Context, e: TodayEntry, openIntent: Intent) {
     ) {
         Text(
             Format.time(context, e.time.toLocalTime()),
-            style = TextStyle(color = ColorProvider(Ink), fontSize = 13.sp, fontWeight = FontWeight.Bold),
-            modifier = GlanceModifier.width(70.dp),
+            style = TextStyle(color = ColorProvider(Ink), fontSize = 16.25.sp, fontWeight = FontWeight.Bold),
+            modifier = GlanceModifier.width(88.dp),
         )
         Image(
             ImageProvider(R.drawable.widget_dot),
@@ -261,7 +261,7 @@ private fun TodayLine(context: Context, e: TodayEntry, openIntent: Intent) {
             colorFilter = ColorFilter.tint(ColorProvider(if (e.isTask) DotGreen else DotRed)),
         )
         Spacer(GlanceModifier.width(8.dp))
-        Text(e.title, maxLines = 2, style = TextStyle(color = ColorProvider(Ink), fontSize = 14.sp), modifier = GlanceModifier.defaultWeight())
+        Text(e.title, maxLines = 2, style = TextStyle(color = ColorProvider(Ink), fontSize = 17.5.sp), modifier = GlanceModifier.defaultWeight())
     }
 }
 
@@ -271,7 +271,7 @@ private fun Empty(text: String, openIntent: Intent) {
         GlanceModifier.fillMaxSize().padding(8.dp).clickable(actionStartActivity(openIntent)),
         contentAlignment = Alignment.Center,
     ) {
-        Text(text, style = TextStyle(color = ColorProvider(InkSoft), fontSize = 13.sp))
+        Text(text, style = TextStyle(color = ColorProvider(InkSoft), fontSize = 16.25.sp))
     }
 }
 
