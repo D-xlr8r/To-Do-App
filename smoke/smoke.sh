@@ -24,11 +24,10 @@ adb logcat -c
 adb shell am start -W -n $PKG/.ui.MainActivity
 sleep 5; tap text "Wait"; adb shell am start -W -n $PKG/.ui.MainActivity; sleep 2; shot 01_tasks_empty
 
-# Only what's new: widget + button, bigger widget text, widget taps
-tap desc "Add task"; typew "Pay electricity bill tomorrow at 6 pm"; tap textprefix "Set reminder"; tap text "High"; tap text "Save"
+# Only the two new changes: widget strike-through + untick, and the hourglass motion
+tap desc "Add task"; typew "Pay electricity bill"; tap text "High"; tap text "Save"
 tap desc "Add task"; typew "Buy milk and bread"; tap text "Medium"; tap text "Save"
 tap desc "Add task"; typew "Call the bank"; tap text "Save"
-shot 05_tasks_list
 
 # 9. Home-screen widget: long-press home → Widgets → search → expand → drag preview onto home
 adb shell input keyevent 3; sleep 2
@@ -52,11 +51,18 @@ if [ -n "$c" ]; then set -- $c; adb shell input draganddrop $1 $(( $2 - 120 )) 5
 sleep 4; shot 21_widget_drop
 tap text "Add"; tap text "Add to home screen"; sleep 3
 adb shell input keyevent 3; sleep 3; shot 22_widget_home
-tap desc "Mark done" 0; sleep 3; shot 23_widget_ticked
-tap text "Today"; sleep 3; shot 24_widget_today
-tap text "Tasks"; sleep 2
-tap desc "Add"; sleep 3; shot 25_widget_plus_opens_app
-adb shell input keyevent 4; sleep 1; adb shell input keyevent 3; sleep 2
+tap desc "Mark done" 0; sleep 3; shot 23_widget_ticked_struck
+tap desc "Mark not done" 0; sleep 3; shot 24_widget_unticked
+tap desc "Mark done" 1; sleep 3; shot 25_widget_ticked_again
+adb shell am start -W -n $PKG/.ui.MainActivity; sleep 3; shot 26_app_completed_section
+adb shell input keyevent 3; sleep 1
+
+adb shell am start -W -n $PKG/.ui.focus.FocusActivity --ei start_minutes 1; sleep 4; shot 30_hg_4s
+adb exec-out screencap -p > shots/31_hg_4s_b.png
+sleep 1; adb exec-out screencap -p > shots/32_hg_5s.png
+sleep 14; shot 33_hg_20s
+sleep 22; shot 34_hg_44s
+adb shell input keyevent 4
 
 adb logcat -d > shots/logcat.txt
 grep -n "FATAL EXCEPTION" -A 30 shots/logcat.txt > shots/crashes.txt || true
