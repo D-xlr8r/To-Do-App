@@ -142,7 +142,9 @@ fun TaskRow(task: Item, onCheck: () -> Unit, onOpen: () -> Unit, onReminder: (()
                         )
                         Spacer(Modifier.width(4.dp))
                         Text(
-                            next?.let { Format.dateTime(context, it.toLocalDateTime()) } ?: "Reminder passed",
+                            next?.let { Format.dateTime(context, it.toLocalDateTime()) }
+                                ?: task.anchorDateTime?.let { "Reminded ${Format.dateTime(context, it).replaceFirstChar { c -> c.lowercase() }}" }
+                                ?: "",
                             style = MaterialTheme.typography.labelMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
