@@ -234,7 +234,7 @@ private fun FocusScreen(
     val bg by animateColorAsState(if (night) Color.Black else MaterialTheme.colorScheme.background, label = "bg")
     val fg by animateColorAsState(if (night) Color(0xFF9AA39D) else MaterialTheme.colorScheme.onBackground, label = "fg")
     val sub = if (night) Color(0xFF5E6661) else MaterialTheme.colorScheme.onSurfaceVariant
-    val accent = if (night) Color(0xFF7FA58B) else MaterialTheme.colorScheme.primary
+    val accent = if (night) Color(0xFF6FAE8A) else MaterialTheme.colorScheme.primary
 
     val running = endAt > 0
     val paused = pausedLeft > 0

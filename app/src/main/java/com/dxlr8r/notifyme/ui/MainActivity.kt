@@ -365,7 +365,7 @@ private fun Header(title: String, subtitle: String, onFocus: () -> Unit, onSetti
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Column(Modifier.weight(1f)) {
-            Text(title, style = MaterialTheme.typography.headlineMedium)
+            Text(title, style = MaterialTheme.typography.headlineMedium, color = MaterialTheme.colorScheme.primary)
             Text(subtitle, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
         IconButton(onClick = onSettings) { Icon(Icons.Outlined.Settings, "Settings") }

@@ -16,65 +16,83 @@ import androidx.compose.ui.unit.sp
 import com.dxlr8r.notifyme.data.Item
 
 object Brand {
-    val Ivory = Color(0xFFFAF8F3)
-    val Sage = Color(0xFF4F7A5E)
-    val SageLight = Color(0xFFDCEADF)
-    val Butter = Color(0xFFF6C85F)
-    val Coral = Color(0xFFE6776C)
-    val Charcoal = Color(0xFF1E211F)
-    val CalendarDot = Color(0xFFE0564B)
+    // One green family: a deep forest green for anything you tap or should notice,
+    // and pale tints of the same green for backgrounds and highlights.
+    val Green900 = Color(0xFF123524)
+    val Green800 = Color(0xFF1B4D35)   // primary
+    val Green700 = Color(0xFF256244)
+    val Green600 = Color(0xFF2F7A55)
+    val Green200 = Color(0xFFB7DCC6)
+    val Green100 = Color(0xFFD9EEE1)
+    val Green50 = Color(0xFFEDF7F1)
+    val Mist = Color(0xFFF6FAF7)       // app background: crisp white with a breath of green
+    val Ink = Color(0xFF121A15)
+    val CalendarDot = Color(0xFFE0453A)
+
+    // Kept for places that referenced the old names
+    val Ivory = Mist
+    val Sage = Green800
+    val SageLight = Green100
+    val Charcoal = Ink
 }
 
 private val Light = lightColorScheme(
-    primary = Brand.Sage,
+    primary = Brand.Green800,
     onPrimary = Color.White,
-    primaryContainer = Brand.SageLight,
-    onPrimaryContainer = Color(0xFF1F3A28),
-    secondary = Color(0xFF7D8C81),
+    primaryContainer = Brand.Green100,
+    onPrimaryContainer = Brand.Green900,
+    inversePrimary = Brand.Green200,
+    secondary = Brand.Green600,
     onSecondary = Color.White,
-    secondaryContainer = Color(0xFFEAF1EB),
-    onSecondaryContainer = Color(0xFF243329),
+    secondaryContainer = Brand.Green50,
+    onSecondaryContainer = Brand.Green900,
     tertiary = Color(0xFFB98A2E),
-    background = Brand.Ivory,
-    onBackground = Brand.Charcoal,
-    surface = Brand.Ivory,
-    onSurface = Brand.Charcoal,
-    surfaceVariant = Color(0xFFF1EEE7),
-    onSurfaceVariant = Color(0xFF6B706C),
+    background = Brand.Mist,
+    onBackground = Brand.Ink,
+    surface = Brand.Mist,
+    onSurface = Brand.Ink,
+    surfaceVariant = Color(0xFFE8F0EB),
+    onSurfaceVariant = Color(0xFF55615A),
+    surfaceTint = Brand.Green800,
     surfaceContainerLowest = Color.White,
-    surfaceContainerLow = Color(0xFFFDFCF9),
-    surfaceContainer = Color(0xFFF6F4EE),
-    surfaceContainerHigh = Color(0xFFF1EEE7),
-    surfaceContainerHighest = Color(0xFFEBE8E0),
-    outline = Color(0xFFD5D1C8),
-    outlineVariant = Color(0xFFE8E4DB),
-    error = Color(0xFFC4534A),
-    inverseSurface = Color(0xFF2B2E2C),
-    inverseOnSurface = Color(0xFFF2F0EA),
+    surfaceContainerLow = Color(0xFFFBFDFC),
+    surfaceContainer = Color(0xFFF0F6F2),
+    surfaceContainerHigh = Color(0xFFE8F1EB),
+    surfaceContainerHighest = Color(0xFFE0EBE4),
+    outline = Color(0xFFC3D3C9),
+    outlineVariant = Color(0xFFDDE8E1),
+    error = Color(0xFFC0392B),
+    errorContainer = Color(0xFFFBE3E0),
+    inverseSurface = Brand.Green900,
+    inverseOnSurface = Color(0xFFEAF5EE),
 )
 
 private val Dark = darkColorScheme(
-    primary = Color(0xFF9CC5A8),
-    onPrimary = Color(0xFF14301E),
-    primaryContainer = Color(0xFF2E4A37),
-    onPrimaryContainer = Color(0xFFD5EADB),
-    secondary = Color(0xFFA9B7AC),
-    secondaryContainer = Color(0xFF2B332D),
-    onSecondaryContainer = Color(0xFFDDE6DF),
-    background = Color(0xFF121413),
-    onBackground = Color(0xFFE4E3DE),
-    surface = Color(0xFF121413),
-    onSurface = Color(0xFFE4E3DE),
-    surfaceVariant = Color(0xFF242826),
-    onSurfaceVariant = Color(0xFFA8ADA9),
-    surfaceContainerLowest = Color(0xFF0E100F),
-    surfaceContainerLow = Color(0xFF1A1D1B),
-    surfaceContainer = Color(0xFF1E2220),
-    surfaceContainerHigh = Color(0xFF252927),
-    surfaceContainerHighest = Color(0xFF2F3331),
-    outline = Color(0xFF4A504C),
-    outlineVariant = Color(0xFF353A37),
-    error = Color(0xFFE88F86),
+    primary = Color(0xFF8ED1AA),
+    onPrimary = Color(0xFF00391F),
+    primaryContainer = Color(0xFF1B4D35),
+    onPrimaryContainer = Color(0xFFCDEEDA),
+    inversePrimary = Brand.Green800,
+    secondary = Color(0xFF9CC9AE),
+    secondaryContainer = Color(0xFF203A2B),
+    onSecondaryContainer = Color(0xFFD5EADD),
+    background = Color(0xFF0E1511),
+    onBackground = Color(0xFFE2EBE5),
+    surface = Color(0xFF0E1511),
+    onSurface = Color(0xFFE2EBE5),
+    surfaceVariant = Color(0xFF1F2A24),
+    onSurfaceVariant = Color(0xFFA6B5AC),
+    surfaceTint = Color(0xFF8ED1AA),
+    surfaceContainerLowest = Color(0xFF09100C),
+    surfaceContainerLow = Color(0xFF151E19),
+    surfaceContainer = Color(0xFF19231D),
+    surfaceContainerHigh = Color(0xFF212C25),
+    surfaceContainerHighest = Color(0xFF2A362F),
+    outline = Color(0xFF45554B),
+    outlineVariant = Color(0xFF2E3B33),
+    error = Color(0xFFF0958B),
+    inverseSurface = Color(0xFFE2EBE5),
+    inverseOnSurface = Color(0xFF16201A),
 )
 
 @Immutable
@@ -97,7 +115,7 @@ data class PriorityPalette(
 
 private val LightPriority = PriorityPalette(
     none = PriorityColors(Color.White, Color(0xFFC8CBC6), "None"),
-    low = PriorityColors(Color(0xFFE4F2E8), Color(0xFF6DAA7F), "Low"),
+    low = PriorityColors(Color(0xFFE2F2E8), Color(0xFF3E9A66), "Low"),
     medium = PriorityColors(Color(0xFFFDF3D6), Color(0xFFE2B444), "Medium"),
     high = PriorityColors(Color(0xFFFCE5E2), Color(0xFFE07A70), "High"),
 )
