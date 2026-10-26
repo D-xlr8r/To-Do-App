@@ -201,7 +201,7 @@ private fun FocusScreen(
     onMarkDone: (Item) -> Unit,
     onClose: () -> Unit,
 ) {
-    var night by rememberSaveable { mutableStateOf(false) }
+    var night by rememberSaveable { mutableStateOf(true) } // focus opens in calm night mode
     var dnd by remember { mutableStateOf(dndOn()) }
     var minutes by rememberSaveable { mutableIntStateOf(defaultMinutes) }
     var endAt by rememberSaveable { mutableLongStateOf(0L) }          // running when > 0
