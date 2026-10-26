@@ -66,8 +66,14 @@ tap text "Cancel"
 # 6. Settings
 tap desc "Settings"; shot 17_settings; adb shell input keyevent 4; sleep 1
 
-# 7. Focus mode (clock ticks, so no UI dumps there)
-adb shell am start -W -n $PKG/.ui.focus.FocusActivity; sleep 3; shot 18_focus
+# 7. Focus mode: bottom-bar tab, then a 1-minute hourglass run
+tap text "Focus"; sleep 2; shot 18_focus_tab
+adb shell input keyevent 4; sleep 2
+adb shell am start -W -n $PKG/.ui.focus.FocusActivity --ei start_minutes 1; sleep 4; shot 18b_hourglass_start
+sleep 22; shot 18c_hourglass_third
+adb shell settings put system accelerometer_rotation 0; adb shell settings put system user_rotation 1; sleep 4; shot 18d_hourglass_landscape
+adb shell settings put system user_rotation 0; sleep 3
+sleep 40; shot 18e_hourglass_finished
 adb shell input keyevent 4; sleep 2
 
 # 9. Home-screen widget: long-press home, open Widgets, add NotifyMe
