@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="add_task"
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_add"
+        android:shortcutShortLabel="@string/shortcut_add_short"
+        android:shortcutLongLabel="@string/shortcut_add_long">
+        <intent
+            android:action="com.dxlr8r.notifyme.ADD_TASK"
+            android:targetPackage="com.dxlr8r.notifyme"
+            android:targetClass="com.dxlr8r.notifyme.ui.MainActivity" />
+    </shortcut>
+    <shortcut
+        android:shortcutId="voice_task"
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_mic"
+        android:shortcutShortLabel="@string/shortcut_voice_short"
+        android:shortcutLongLabel="@string/shortcut_voice_long">
+        <intent
+            android:action="com.dxlr8r.notifyme.VOICE_TASK"
+            android:targetPackage="com.dxlr8r.notifyme"
+            android:targetClass="com.dxlr8r.notifyme.ui.MainActivity" />
+    </shortcut>
+    <shortcut
+        android:shortcutId="focus"
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_focus"
+        android:shortcutShortLabel="@string/shortcut_focus_short"
+        android:shortcutLongLabel="@string/shortcut_focus_long">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.dxlr8r.notifyme"
+            android:targetClass="com.dxlr8r.notifyme.ui.focus.FocusActivity" />
+    </shortcut>
+</shortcuts>
