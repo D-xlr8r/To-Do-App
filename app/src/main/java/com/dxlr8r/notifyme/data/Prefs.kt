@@ -18,6 +18,10 @@ class Prefs(context: Context) {
         get() = sp.getBoolean("completed_expanded", false)
         set(v) = sp.edit().putBoolean("completed_expanded", v).apply()
 
+    var onboardingDone: Boolean
+        get() = sp.getBoolean("onboarding_done", false)
+        set(v) = sp.edit().putBoolean("onboarding_done", v).apply()
+
     var focusMinutes: Int
         get() = sp.getInt("focus_minutes", 25)
         set(v) = sp.edit().putInt("focus_minutes", v).apply()

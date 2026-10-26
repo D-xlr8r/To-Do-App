@@ -70,6 +70,7 @@ import com.dxlr8r.notifyme.ui.common.SystemSettings
 import com.dxlr8r.notifyme.ui.editor.EditorRequest
 import com.dxlr8r.notifyme.ui.editor.ItemEditorSheet
 import com.dxlr8r.notifyme.ui.focus.FocusActivity
+import com.dxlr8r.notifyme.ui.onboarding.OnboardingScreen
 import com.dxlr8r.notifyme.ui.settings.BatteryGuideDialog
 import com.dxlr8r.notifyme.ui.settings.SettingsSheet
 import com.dxlr8r.notifyme.ui.tasks.TasksScreen
@@ -141,6 +142,7 @@ private fun NotifyApp(vm: MainViewModel, launch: LaunchRequest?, consumeLaunch: 
     var voiceLanguage by remember { mutableStateOf(vm.prefs.voiceLanguage) }
     var status by remember { mutableStateOf(SystemSettings.status(context)) }
     var prompt by remember { mutableStateOf<Prompt?>(null) }
+    var showTour by rememberSaveable { mutableStateOf(!vm.prefs.onboardingDone) }
     var pendingAlarmCheck by remember { mutableStateOf(false) }
 
     LifecycleResumeEffect(Unit) {
@@ -215,6 +217,14 @@ private fun NotifyApp(vm: MainViewModel, launch: LaunchRequest?, consumeLaunch: 
                 },
             )
         }
+    }
+
+    if (showTour) {
+        OnboardingScreen(onDone = {
+            vm.prefs.onboardingDone = true
+            showTour = false
+        })
+        return
     }
 
     Scaffold(
@@ -332,6 +342,7 @@ private fun NotifyApp(vm: MainViewModel, launch: LaunchRequest?, consumeLaunch: 
             voiceLanguage = voiceLanguage,
             onVoiceLanguageChange = { voiceLanguage = it; vm.prefs.voiceLanguage = it },
             onDismiss = { settingsOpen = false },
+            onShowTour = { settingsOpen = false; showTour = true },
         )
     }
 

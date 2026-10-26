@@ -18,6 +18,7 @@ import androidx.compose.material.icons.outlined.Alarm
 import androidx.compose.material.icons.outlined.BatteryChargingFull
 import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.material.icons.outlined.ErrorOutline
+import androidx.compose.material.icons.outlined.Explore
 import androidx.compose.material.icons.outlined.Fullscreen
 import androidx.compose.material.icons.outlined.MusicNote
 import androidx.compose.material.icons.outlined.Notifications
@@ -56,6 +57,7 @@ fun SettingsSheet(
     voiceLanguage: String,
     onVoiceLanguageChange: (String) -> Unit,
     onDismiss: () -> Unit,
+    onShowTour: () -> Unit = {},
 ) {
     val context = LocalContext.current
     var battery by remember { mutableStateOf(false) }
@@ -123,6 +125,12 @@ fun SettingsSheet(
                         ) { Text("हिंदी") }
                     }
                 }
+            }
+
+            Spacer(Modifier.height(18.dp))
+            Section("Help")
+            Group {
+                FieldRow(Icons.Outlined.Explore, "App tour", "See how everything works", onClick = onShowTour)
             }
 
             Spacer(Modifier.height(24.dp))
