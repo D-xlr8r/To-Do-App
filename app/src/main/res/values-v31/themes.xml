@@ -1,0 +1,10 @@
+<resources>
+    <style name="Theme.NotifyMe" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/brand_ivory</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowSplashScreenBackground">@color/ic_launcher_background</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/splash_icon</item>
+    </style>
+</resources>

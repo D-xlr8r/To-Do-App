@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="22dp" />
+            <gradient android:angle="270" android:startColor="#F5F8C9" android:endColor="#E4EC97" />
+        </shape>
+    </item>
+    <!-- a strip of "tape" holding the note -->
+    <item android:gravity="top|center_horizontal" android:width="64dp" android:height="9dp">
+        <shape android:shape="rectangle">
+            <corners android:bottomLeftRadius="3dp" android:bottomRightRadius="3dp" />
+            <solid android:color="#40FFFFFF" />
+        </shape>
+    </item>
+</layer-list>

@@ -33,3 +33,7 @@ google-services.json
 
 # Android Profiling
 *.hprof
+
+# Signing secrets (never commit)
+keystore.properties
+signing/

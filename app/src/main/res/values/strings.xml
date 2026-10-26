@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">NotifyMe</string>
+    <string name="widget_name">NotifyMe sticky note</string>
+    <string name="widget_description">Your tasks and today\'s reminders on a sticky note</string>
+    <string name="shortcut_add_short">Add task</string>
+    <string name="shortcut_add_long">Add a new task</string>
+    <string name="shortcut_voice_short">Speak a task</string>
+    <string name="shortcut_voice_long">Add a task by voice</string>
+    <string name="shortcut_focus_short">Focus</string>
+    <string name="shortcut_focus_long">Start focus mode</string>
+</resources>
