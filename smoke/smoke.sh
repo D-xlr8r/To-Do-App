@@ -24,57 +24,11 @@ adb logcat -c
 adb shell am start -W -n $PKG/.ui.MainActivity
 sleep 5; tap text "Wait"; adb shell am start -W -n $PKG/.ui.MainActivity; sleep 2; shot 01_tasks_empty
 
-# 1. Smart text → reminder suggestion
-tap desc "Add task"; sleep 2
-typew "Pay electricity bill tomorrow at 6 pm"; fieldtext
-shot 02_editor_keyboard_open
-tap textprefix "Set reminder"; fieldtext; tap text "High"; shot 03_editor_applied
-tap text "Save"; shot 04_tasks_one
-
-tap desc "Add task"; typew "Buy milk and bread"; hidekb; tap text "Medium"; tap text "Save"
-tap desc "Add task"; typew "Call the bank"; hidekb; tap text "Low"; tap text "Save"
+# Only what's new: widget + button, bigger widget text, widget taps
+tap desc "Add task"; typew "Pay electricity bill tomorrow at 6 pm"; tap textprefix "Set reminder"; tap text "High"; tap text "Save"
+tap desc "Add task"; typew "Buy milk and bread"; tap text "Medium"; tap text "Save"
+tap desc "Add task"; typew "Call the bank"; tap text "Save"
 shot 05_tasks_list
-
-# 2. A reminder one minute from now with Alarm mode — must ring on the lock screen
-tap desc "Add task"; typew "Drink water in 1 minute"; fieldtext; hidekb
-tap textprefix "Set reminder"; tap text "Alarm"; shot 06_alarm_setup; tap text "Save"
-shot 07_before_alarm
-adb shell input keyevent 26   # screen off (lock)
-sleep 140
-shot 08_alarm_fired
-adb shell dumpsys notification --noredact | grep -E "pkg=com.dxlr8r|android.title=|android.text=" | head -20 > shots/notifications.txt
-tap text "Mark done"; sleep 2; shot 09_after_alarm
-adb shell input keyevent 82; adb shell wm dismiss-keyguard; sleep 2
-adb shell am start -W -n $PKG/.ui.MainActivity; sleep 3; shot 10_tasks_after_alarm
-
-# 3. Notification-style reminder + snooze from notification
-tap desc "Add task"; typew "Stretch in 1 minute"; hidekb; tap textprefix "Set reminder"; tap text "Save"
-adb shell input keyevent 3; sleep 130
-adb shell cmd statusbar expand-notifications; sleep 2; shot 11_notification
-tap text "Snooze 10 min"; sleep 2; shot 12_after_snooze
-adb shell cmd statusbar collapse
-adb shell am start -W -n $PKG/.ui.MainActivity; sleep 3; shot 13_tasks_snoozed
-
-# 4. Tick a task, undo, completed list
-tap desc "Mark done" 1; adb exec-out screencap -p > shots/14_done_snackbar.png
-sleep 5; tap textprefix "Completed"; shot 15_completed
-
-# 5. Hindi phrase parsing via typed text
-tap desc "Add task"; adb shell input text "kal%sshaam%s7%sbaje%sdawai%slena"; sleep 2; fieldtext; hidekb; shot 16_hinglish_suggestion
-tap text "Cancel"
-
-# 6. Settings
-tap desc "Settings"; shot 17_settings; adb shell input keyevent 4; sleep 1
-
-# 7. Focus mode: bottom-bar tab, then a 1-minute hourglass run
-tap text "Focus"; sleep 2; shot 18_focus_tab
-adb shell input keyevent 4; sleep 2
-adb shell am start -W -n $PKG/.ui.focus.FocusActivity --ei start_minutes 1; sleep 4; shot 18b_hourglass_start
-sleep 22; shot 18c_hourglass_third
-adb shell settings put system accelerometer_rotation 0; adb shell settings put system user_rotation 1; sleep 4; shot 18d_hourglass_landscape
-adb shell settings put system user_rotation 0; sleep 3
-sleep 40; shot 18e_hourglass_finished
-adb shell input keyevent 4; sleep 2
 
 # 9. Home-screen widget: long-press home → Widgets → search → expand → drag preview onto home
 adb shell input keyevent 3; sleep 2
@@ -104,11 +58,6 @@ tap text "Tasks"; sleep 2
 tap desc "Add"; sleep 3; shot 25_widget_plus_opens_app
 adb shell input keyevent 4; sleep 1; adb shell input keyevent 3; sleep 2
 
-# 8. Rescheduling after "update" and widget update broadcast
-adb shell am broadcast -a android.intent.action.MY_PACKAGE_REPLACED -n $PKG/.reminders.SystemEventsReceiver
-adb shell am broadcast -a android.appwidget.action.APPWIDGET_UPDATE -n $PKG/.widget.NotifyWidgetReceiver
-sleep 3
-adb shell dumpsys alarm | grep -A3 "com.dxlr8r" | head -30 > shots/alarms.txt
 adb logcat -d > shots/logcat.txt
 grep -n "FATAL EXCEPTION" -A 30 shots/logcat.txt > shots/crashes.txt || true
 echo "done" >> shots/steps.txt
