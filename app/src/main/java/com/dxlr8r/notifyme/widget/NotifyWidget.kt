@@ -1,5 +1,7 @@
 package com.dxlr8r.notifyme.widget
 
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import androidx.compose.runtime.Composable
@@ -54,6 +56,9 @@ import com.dxlr8r.notifyme.R
 import com.dxlr8r.notifyme.core.Recurrence
 import com.dxlr8r.notifyme.data.Item
 import com.dxlr8r.notifyme.data.Repository
+import com.dxlr8r.notifyme.data.toEpochMillis
+import com.dxlr8r.notifyme.reminders.ReminderReceiver
+import kotlinx.coroutines.flow.first
 import com.dxlr8r.notifyme.data.toLocalDateTime
 import com.dxlr8r.notifyme.ui.MainActivity
 import com.dxlr8r.notifyme.ui.common.Format
@@ -78,13 +83,13 @@ class NotifyWidget : GlanceAppWidget() {
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
         val repo = Repository.get(context)
-        val firstTasks = repo.pendingTasks()
+        val firstTasks = repo.tasks.first()
         val firstEvents = repo.allEvents()
         provideContent {
             val tasks by repo.tasks.collectAsState(initial = firstTasks)
             val events by repo.events.collectAsState(initial = firstEvents)
             val mode = currentState<Preferences>()[MODE] ?: 0
-            StickyNote(context, mode, tasks.filter { !it.done }, events)
+            StickyNote(context, mode, widgetTasks(tasks), events)
         }
     }
 }
@@ -97,12 +102,35 @@ object WidgetUpdater {
     suspend fun update(context: Context) {
         runCatching { NotifyWidget().updateAll(context) }
     }
+
+    /** Refresh shortly after midnight so yesterday's ticked tasks leave the note. */
+    fun scheduleMidnight(context: Context) {
+        val am = context.getSystemService(AlarmManager::class.java) ?: return
+        val at = LocalDate.now().plusDays(1).atStartOfDay().plusSeconds(30).toEpochMillis()
+        val pi = PendingIntent.getBroadcast(
+            context, 0x6D1D,
+            Intent(context, ReminderReceiver::class.java).setAction(ReminderReceiver.ACTION_MIDNIGHT),
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
+        )
+        am.set(AlarmManager.RTC, at, pi)
+    }
 }
 
+/**
+ * Pending tasks plus anything ticked off today, kept in their usual place so the list stays
+ * readable. Tasks completed on earlier days drop off the note.
+ */
+internal fun widgetTasks(all: List<Item>, today: LocalDate = LocalDate.now()): List<Item> =
+    all.filter { !it.done || it.completedAt?.toLocalDateTime()?.toLocalDate() == today }
+        .sortedWith(compareByDescending<Item> { it.priority }.thenBy { it.createdAt })
+
+/** Tick or untick a task from the widget. */
 class ToggleTaskAction : ActionCallback {
     override suspend fun onAction(context: Context, glanceId: GlanceId, parameters: ActionParameters) {
         val id = parameters[KEY_ID] ?: return
-        Repository.get(context).setDone(id, true)
+        val repo = Repository.get(context)
+        val item = repo.get(id) ?: return
+        repo.setDone(id, !item.done)
     }
 }
 
@@ -201,38 +229,40 @@ private fun Tab(label: String, active: Boolean, mode: Int) {
 
 @Composable
 private fun TaskLine(context: Context, task: Item, openIntent: Intent) {
+    val done = task.done
     Row(GlanceModifier.fillMaxWidth().padding(vertical = 4.dp), verticalAlignment = Alignment.CenterVertically) {
         Image(
-            ImageProvider(R.drawable.ic_w_box),
-            contentDescription = "Mark done",
+            ImageProvider(if (done) R.drawable.ic_w_box_checked else R.drawable.ic_w_box),
+            contentDescription = if (done) "Mark not done" else "Mark done",
             modifier = GlanceModifier.size(30.dp).padding(5.dp)
                 .clickable(actionRunCallback<ToggleTaskAction>(actionParametersOf(KEY_ID to task.id))),
         )
         Spacer(GlanceModifier.width(6.dp))
         if (task.priority != Item.PRIORITY_NONE) {
+            val dot = when (task.priority) {
+                Item.PRIORITY_HIGH -> DotRed
+                Item.PRIORITY_MEDIUM -> DotYellow
+                else -> DotGreen
+            }
             Image(
                 ImageProvider(R.drawable.widget_dot),
                 contentDescription = null,
                 modifier = GlanceModifier.size(8.dp),
-                colorFilter = ColorFilter.tint(
-                    ColorProvider(
-                        when (task.priority) {
-                            Item.PRIORITY_HIGH -> DotRed
-                            Item.PRIORITY_MEDIUM -> DotYellow
-                            else -> DotGreen
-                        },
-                    ),
-                ),
+                colorFilter = ColorFilter.tint(ColorProvider(if (done) dot.copy(alpha = 0.4f) else dot)),
             )
             Spacer(GlanceModifier.width(7.dp))
         }
         Text(
             task.title,
             maxLines = 2,
-            style = TextStyle(color = ColorProvider(Ink), fontSize = 17.5.sp),
+            style = TextStyle(
+                color = ColorProvider(if (done) InkSoft else Ink),
+                fontSize = 17.5.sp,
+                textDecoration = if (done) TextDecoration.LineThrough else TextDecoration.None,
+            ),
             modifier = GlanceModifier.defaultWeight().clickable(actionStartActivity(openIntent)),
         )
-        val next = task.snoozeAt ?: task.nextAt
+        val next = if (done) null else task.snoozeAt ?: task.nextAt
         if (next != null) {
             Spacer(GlanceModifier.width(6.dp))
             Text(

@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import com.dxlr8r.notifyme.data.Repository
 import com.dxlr8r.notifyme.data.toEpochMillis
+import com.dxlr8r.notifyme.widget.WidgetUpdater
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -37,6 +38,10 @@ class ReminderReceiver : BroadcastReceiver() {
                         repo.snooze(id, snoozeUntil(minutes))
                         AlarmBus.dismiss(id)
                     }
+                    ACTION_MIDNIGHT -> {
+                        WidgetUpdater.update(context)
+                        WidgetUpdater.scheduleMidnight(context)
+                    }
                     ACTION_DISMISS -> {
                         Notifications.cancel(context, id)
                         AlarmBus.dismiss(id)
@@ -53,6 +58,7 @@ class ReminderReceiver : BroadcastReceiver() {
         const val ACTION_DONE = "com.dxlr8r.notifyme.DONE"
         const val ACTION_SNOOZE = "com.dxlr8r.notifyme.SNOOZE"
         const val ACTION_DISMISS = "com.dxlr8r.notifyme.DISMISS"
+        const val ACTION_MIDNIGHT = "com.dxlr8r.notifyme.MIDNIGHT"
         const val EXTRA_ID = "id"
         const val EXTRA_SNOOZE = "snooze"
         const val EXTRA_MINUTES = "minutes"

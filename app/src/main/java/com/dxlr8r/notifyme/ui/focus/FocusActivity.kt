@@ -260,12 +260,12 @@ private fun FocusScreen(
         val hourglassColors = if (night) {
             HourglassColors(
                 woodLight = Color(0xFF6B5340), woodDark = Color(0xFF3E2D20), glass = Color(0xFF6A6383),
-                sandLight = Color(0xFFC9A86A), sand = Color(0xFFA98647), sandDark = Color(0xFF7E6232), shadow = Color(0x66000000),
+                sandLight = Color(0xFFFFE08A), sand = Color(0xFFF2C14E), sandDark = Color(0xFFC9952E), shadow = Color(0x66000000),
             )
         } else {
             HourglassColors(
                 woodLight = Color(0xFFB07B4F), woodDark = Color(0xFF6B4426), glass = Color(0xFF9C93B5),
-                sandLight = Color(0xFFF3DDA6), sand = Color(0xFFE2BC72), sandDark = Color(0xFFC08F45), shadow = Color(0x33000000),
+                sandLight = Color(0xFFFFE7A3), sand = Color(0xFFF4C95C), sandDark = Color(0xFFD9A23E), shadow = Color(0x33000000),
             )
         }
 
