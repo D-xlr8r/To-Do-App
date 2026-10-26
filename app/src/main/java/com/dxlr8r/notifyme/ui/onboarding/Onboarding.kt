@@ -61,6 +61,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -281,7 +282,11 @@ private fun WelcomeArt() {
     Image(
         painterResource(R.drawable.ic_launcher_foreground),
         contentDescription = "NotifyMe",
-        modifier = Modifier.size(240.dp).clip(RoundedCornerShape(56.dp)),
+        // The icon art carries launcher safe-zone padding; zoom in so the logo fills the card.
+        modifier = Modifier
+            .size(220.dp)
+            .clip(RoundedCornerShape(52.dp))
+            .graphicsLayer(scaleX = 1.55f, scaleY = 1.55f),
     )
 }
 
